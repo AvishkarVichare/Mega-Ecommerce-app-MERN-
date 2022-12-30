@@ -7,12 +7,12 @@ const ProductSchema = new mongoose.Schema({
         trim: true,
         maxLength: [120, "product name should not be more than 120"]
     },
-    name: {
+    price: {
         type: Number,
         required: [true, "price  is required"],
         maxLength: [5, "price should not more than 5 digits"]
     },
-    name: {
+    description: {
         type: String,
         required: [true, "product Description is required"],
         // use some form of editor for node js- assignment
