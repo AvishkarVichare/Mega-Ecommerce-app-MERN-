@@ -1,5 +1,7 @@
-const mongoose = require('mongoose');
-const { default: AuthRoles } = require('../utils/authRoles');
+import bcrypt from 'bcryptjs';
+import AuthRoles from '../utils/authRoles';
+import jwt from 'jsonwebtoken';
+import config from '../config/index.js'
 
 const UserSchema = mongoose.Schema(
     {
@@ -23,7 +25,56 @@ const UserSchema = mongoose.Schema(
             type: String,
             enum: Object.values(AuthRoles),
             default: AuthRoles.USER,
-        }
+        },
+        forgotPasswordtoken: {
+            type: String
+        },
+        forgotPasswordExpiry: {
+            type: String
+        },
+
+    },
+    {
+        timestamps: true
     }
 )
+
+// encrypt password
+UserSchema.pre('save', async function(next){
+    if(this.modified('password')){
+        const salt = bcrypt.genSalt(10);
+        this.password = bcrypt.hash(this.password, salt);
+        next()
+    }
+    else{
+        return next()
+    }
+
+})
+
+//compare password method for schema
+UserSchema.methods = {
+
+    // compare password 
+    comparePasswords: async function(enteredPassword){
+        return await bcrypt.compare(enteredPassword, this.password)
+    },
+
+    // get jwt token
+    generateJwtToken: async function(){
+        const token = jwt.sign({
+            id: this._id,
+            role: this.role,
+        },
+        config.JWT_SECRET,//secret
+        {
+            expiresIn: config.JWT_EXPIRY
+        }
+        )
+
+        return token;
+    }
+}
+
+
 
