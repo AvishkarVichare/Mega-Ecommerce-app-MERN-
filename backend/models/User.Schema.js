@@ -3,6 +3,7 @@ import AuthRoles from '../utils/authRoles';
 import jwt from 'jsonwebtoken';
 import config from '../config/index.js'
 import crypto from "crypto"
+import mongoose from 'mongoose';
 
 const UserSchema = mongoose.Schema(
     {
@@ -92,4 +93,4 @@ UserSchema.methods = {
 }
 
 
-
+export default mongoose.model('user', UserSchema);
