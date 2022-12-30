@@ -2,6 +2,7 @@ import bcrypt from 'bcryptjs';
 import AuthRoles from '../utils/authRoles';
 import jwt from 'jsonwebtoken';
 import config from '../config/index.js'
+import crypto from "crypto"
 
 const UserSchema = mongoose.Schema(
     {
@@ -73,7 +74,21 @@ UserSchema.methods = {
         )
 
         return token;
-    }
+    },
+
+    // create forgotPassword String 
+     generateForgotPasswordString:  async function(){
+        const forgotPassToken = crypto.randomBytes(20).toString('hex');
+
+        this.forgotPasswordtoken = crypto
+        .createHash('sha256')
+        .update(forgotPassString)
+        .digest('hex')
+
+        this.forgotPasswordExpiry = Date.now() + 20*60*1000;
+
+        return forgotPassToken;
+     }
 }
 
 
