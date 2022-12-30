@@ -63,7 +63,7 @@ UserSchema.methods = {
     },
 
     // get jwt token
-    generateJwtToken: async function(){
+    generateJwtToken: function(){
         const token = jwt.sign({
             id: this._id,
             role: this.role,
