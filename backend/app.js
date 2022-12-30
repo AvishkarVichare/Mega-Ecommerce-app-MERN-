@@ -7,6 +7,8 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(cors());
+
+// morgan logger 
 app.use(morgan('tiny')); // combined can be used
 
 export default app;
